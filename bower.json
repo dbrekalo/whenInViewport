@@ -1,0 +1,23 @@
+{
+  "name": "whenInViewport",
+  "version": "1.0.0",
+  "homepage": "https://github.com/dbrekalo/whenInViewport",
+  "authors": [
+    "Damir Brekalo <dbrekalo@gmail.com>"
+  ],
+  "description": "Do stuff when element enters viewport with this jQuery plugin",
+  "main": "dist/whenInViewport.min.js",
+  "keywords": [
+    "whenInViewport",
+    "viewport",
+    "when"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
