@@ -1,4 +1,4 @@
-#Repository
+#When in viewport
 Do stuff when element enters viewport with this simple and lightweight jQuery plugin
 
 ##Basic usage
