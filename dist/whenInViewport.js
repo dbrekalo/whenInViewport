@@ -63,7 +63,7 @@
 
 		$.each(elRegistry, function(key, options){
 
-			if (scrollOffset + windowHeight > options.topOffset + options.threshold) {
+			if (scrollOffset + windowHeight > options.topOffset - options.threshold) {
 
 				options.context ? options.callback.call(options.context, elRegistry[key].$el) : options.callback(elRegistry[key].$el);
 				delete elRegistry[key];
@@ -101,6 +101,10 @@
 		setDelayTimeout: function(timeout){
 			delayTimeout = timeout;
 			return this;
+		},
+		destroy: function(){
+			elRegistry = {};
+			events.destroy();
 		}
 	});
 
