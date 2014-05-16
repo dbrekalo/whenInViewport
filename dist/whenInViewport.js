@@ -59,7 +59,6 @@
 	function processRegistry(){
 
 		var scrollOffset = $window.scrollTop();
-		windowHeight = windowHeight || $window.height();
 
 		$.each(elRegistry, function(key, options){
 
@@ -113,19 +112,24 @@
 	$.whenInViewport.defaults = {
 		'callback': function(){},
 		'threshold': 0,
-		'context': null
+		'context': null,
+		'setupOnce': false
 	};
 
-	$.fn.whenInViewport = function(options) {
+	$.fn.whenInViewport = function(options, moreOptions) {
 
 		if (typeof options === 'function'){
-			options = {'callback': options};
+			options = $.extend({}, moreOptions, {'callback': options});
 		}
 
-		return this.each(function() {
-			if (!$.data(this, 'whenInViewport')) {
+		return this.each(function(){
+
+			if (options.setupOnce && !$.data(this, 'whenInViewport')) {
 				$.data(this, 'whenInViewport', new WhenInViewport(this, options));
+			} else {
+				new WhenInViewport(this, options);
 			}
+
 		});
 
 	};
