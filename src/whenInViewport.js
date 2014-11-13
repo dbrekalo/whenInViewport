@@ -12,7 +12,8 @@
 			};
 
 			return f;
-		};
+		},
+		processRegistryWithDelay;
 
 	var events = {
 
@@ -52,7 +53,9 @@
 			'$el':  $el,
 			'topOffset': $el.offset().top
 		});
-		processRegistry();
+
+		processRegistryWithDelay || (processRegistryWithDelay = delayEngine(processRegistry, 0));
+		processRegistryWithDelay();
 
 	}
 
