@@ -13,18 +13,22 @@
 
 			return f;
 		},
+
 		processRegistryWithDelay;
 
 	var events = {
 
-		namespace: '.whenInViewport',
 		setuped: false,
 
 		setup: function(){
 
 			if (this.setuped) { return; }
-			$window.on('scroll' + this.namespace , delayEngine(processRegistry, delayTimeout));
-			$window.on('resize' + this.namespace , delayEngine(adjustPositions, delayTimeout));
+
+			this.scrollHandler = this.scrollHandler || delayEngine(processRegistry, delayTimeout);
+			this.resizeHandler = this.resizeHandler || delayEngine(adjustPositions, delayTimeout);
+
+			$window.on('scroll', this.scrollHandler).on('resize', this.resizeHandler);
+
 			this.setuped = true;
 			windowHeight = $window.height();
 
@@ -32,7 +36,7 @@
 
 		destroy: function(){
 
-			if (this.setuped) { $window.off(this.namespace); }
+			this.setuped && $window.off('scroll', this.scrollHandler).off('resize', this.resizeHandler);
 			this.setuped = false;
 
 		},
