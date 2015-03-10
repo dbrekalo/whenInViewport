@@ -67,18 +67,19 @@
 
 		var scrollOffset = $window.scrollTop();
 
-		$.each(elRegistry, function(key, options){
+		for (var key in elRegistry) {
 
-			if (scrollOffset + windowHeight > options.topOffset - options.threshold) {
+			var item = elRegistry[key];
 
-				options.context ? options.callback.call(options.context, elRegistry[key].$el) : options.callback(elRegistry[key].$el);
+			if (scrollOffset + windowHeight > item.topOffset - item.threshold) {
+
+				item.callback.call(item.context || window, item.$el);
 				delete elRegistry[key];
 
 				events.checkRegistry();
 
 			}
-
-		});
+		}
 
 	}
 
@@ -86,9 +87,11 @@
 
 		windowHeight = $window.height();
 
-		$.each(elRegistry, function(key, options){
-			elRegistry[key].topOffset = options.$el.offset().top;
-		});
+		for (var key in elRegistry) {
+
+			elRegistry[key].topOffset = elRegistry[key].$el.offset().top;
+
+		}
 
 	}
 
