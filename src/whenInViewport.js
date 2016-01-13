@@ -1,148 +1,160 @@
-;(function($, window) {
+(function(factory) {
 
-	var $window = window.app && window.app.$window || $(window),
-		elRegistry = {},
-		delayTimeout = 100,
-		windowHeight,
-		delayEngine = function(callback, timeout){
+    if (typeof define === 'function' && define.amd) {
+        define(['jquery'], factory);
+    } else if (typeof module === 'object' && module.exports) {
+        module.exports = factory(require('jquery'));
+    } else {
+        factory(jQuery);
+    }
 
-			var f = function(){
-				clearTimeout(f.timeout);
-				f.timeout = setTimeout(callback, timeout);
-			};
+}(function($) {
 
-			return f;
-		},
+    var $window = $(window),
+        elRegistry = {},
+        delayTimeout = 100,
+        windowHeight,
+        delayEngine = function(callback, timeout) {
 
-		processRegistryWithDelay;
+            var f = function() {
+                clearTimeout(f.timeout);
+                f.timeout = setTimeout(callback, timeout);
+            };
 
-	var events = {
+            return f;
+        },
 
-		setuped: false,
+        processRegistryWithDelay;
 
-		setup: function(){
+    var events = {
 
-			if (this.setuped) { return; }
+        setuped: false,
 
-			this.scrollHandler = this.scrollHandler || delayEngine(processRegistry, delayTimeout);
-			this.resizeHandler = this.resizeHandler || delayEngine(adjustPositions, delayTimeout);
+        setup: function() {
 
-			$window.on('scroll', this.scrollHandler).on('resize', this.resizeHandler);
+            if (this.setuped) { return; }
 
-			this.setuped = true;
-			windowHeight = $window.height();
+            this.scrollHandler = this.scrollHandler || delayEngine(processRegistry, delayTimeout);
+            this.resizeHandler = this.resizeHandler || delayEngine(adjustPositions, delayTimeout);
 
-		},
+            $window.on('scroll', this.scrollHandler).on('resize', this.resizeHandler);
 
-		destroy: function(){
+            this.setuped = true;
+            windowHeight = $window.height();
 
-			this.setuped && $window.off('scroll', this.scrollHandler).off('resize', this.resizeHandler);
-			this.setuped = false;
+        },
 
-		},
+        destroy: function() {
 
-		checkRegistry: function(){
+            this.setuped && $window.off('scroll', this.scrollHandler).off('resize', this.resizeHandler);
+            this.setuped = false;
 
-			!$.isEmptyObject(elRegistry) ? this.setup() : this.destroy();
+        },
 
-		}
+        checkRegistry: function() {
 
-	};
+            !$.isEmptyObject(elRegistry) ? this.setup() : this.destroy();
 
-	function registerElement($el, options) {
+        }
 
-		registerElement.counter = registerElement.counter || 0;
+    };
 
-		elRegistry['whenInViewport' + (++registerElement.counter)] = $.extend({}, $.whenInViewport.defaults, options, {
-			'$el':  $el,
-			'topOffset': $el.offset().top
-		});
+    function registerElement($el, options) {
 
-		processRegistryWithDelay || (processRegistryWithDelay = delayEngine(processRegistry, 0));
-		processRegistryWithDelay();
+        registerElement.counter = registerElement.counter || 0;
 
-	}
+        elRegistry['whenInViewport' + (++registerElement.counter)] = $.extend({}, $.whenInViewport.defaults, options, {
+            '$el':  $el,
+            'topOffset': $el.offset().top
+        });
 
-	function processRegistry(){
+        processRegistryWithDelay || (processRegistryWithDelay = delayEngine(processRegistry, 0));
+        processRegistryWithDelay();
 
-		var scrollOffset = $window.scrollTop();
+    }
 
-		for (var key in elRegistry) {
+    function processRegistry() {
 
-			var item = elRegistry[key];
+        var scrollOffset = $window.scrollTop();
 
-			if (scrollOffset + windowHeight > item.topOffset - item.threshold) {
+        for (var key in elRegistry) {
 
-				item.callback.call(item.context || window, item.$el);
-				delete elRegistry[key];
+            var item = elRegistry[key];
 
-				events.checkRegistry();
+            if (scrollOffset + windowHeight > item.topOffset - item.threshold) {
 
-			}
-		}
+                item.callback.call(item.context || window, item.$el);
+                delete elRegistry[key];
 
-	}
+                events.checkRegistry();
 
-	function adjustPositions(){
+            }
+        }
 
-		windowHeight = $window.height();
+    }
 
-		for (var key in elRegistry) {
+    function adjustPositions() {
 
-			elRegistry[key].topOffset = elRegistry[key].$el.offset().top;
+        windowHeight = $window.height();
 
-		}
+        for (var key in elRegistry) {
 
-	}
+            elRegistry[key].topOffset = elRegistry[key].$el.offset().top;
 
-	function WhenInViewport(el, options) {
+        }
 
-		typeof windowHeight === 'undefined' && (windowHeight = $window.height());
-		registerElement($(el), options);
-		events.checkRegistry();
+    }
 
-	}
+    function WhenInViewport(el, options) {
 
-	$.extend(WhenInViewport, {
-		setDelayEngine: function(engine){
-			delayEngine = engine;
-			return this;
-		},
-		setDelayTimeout: function(timeout){
-			delayTimeout = timeout;
-			return this;
-		},
-		destroy: function(){
-			elRegistry = {};
-			events.destroy();
-		}
-	});
+        typeof windowHeight === 'undefined' && (windowHeight = $window.height());
+        registerElement($(el), options);
+        events.checkRegistry();
 
-	$.whenInViewport = WhenInViewport;
+    }
 
-	$.whenInViewport.defaults = {
-		'callback': function(){},
-		'threshold': 0,
-		'context': null,
-		'setupOnce': false
-	};
+    $.extend(WhenInViewport, {
+        setDelayEngine: function(engine) {
+            delayEngine = engine;
+            return this;
+        },
+        setDelayTimeout: function(timeout) {
+            delayTimeout = timeout;
+            return this;
+        },
+        destroy: function() {
+            elRegistry = {};
+            events.destroy();
+        }
+    });
 
-	$.fn.whenInViewport = function(options, moreOptions) {
+    WhenInViewport.defaults = {
+        callback: function() {},
+        threshold: 0,
+        context: null,
+        setupOnce: false
+    };
 
-		if (typeof options === 'function'){
-			options = $.extend({}, moreOptions, {'callback': options});
-		}
+    $.WhenInViewport = $.whenInViewport = WhenInViewport;
 
-		return this.each(function(){
+    $.fn.whenInViewport = function(options, moreOptions) {
 
-			if (options.setupOnce && !$.data(this, 'whenInViewport')) {
-				$.data(this, 'whenInViewport', new WhenInViewport(this, options));
-			} else {
-				new WhenInViewport(this, options);
-			}
+        if (typeof options === 'function') {
+            options = $.extend({}, moreOptions, {'callback': options});
+        }
 
-		});
+        return this.each(function() {
 
-	};
+            if (options.setupOnce && !$.data(this, 'whenInViewport')) {
+                $.data(this, 'whenInViewport', new WhenInViewport(this, options));
+            } else {
+                new WhenInViewport(this, options);
+            }
 
-})(window.jQuery || window.Zepto, window);
+        });
+
+    };
+
+    return $;
+
+}));

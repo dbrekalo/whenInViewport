@@ -1,57 +1,95 @@
 /* jshint node: true */
 module.exports = function(grunt) {
 
-	grunt.initConfig({
+    grunt.initConfig({
 
-		uglify: {
-			min: {
-				files: [{
-					expand: true,
-					cwd: 'src',
-					src: '**/*.js',
-					dest: 'dist',
-					ext: '.min.js'
-				}],
-				options: {
+        pkg: grunt.file.readJSON('package.json'),
 
-				}
-			}
-		},
+        uglify: {
+            min: {
+                files: [{
+                    expand: true,
+                    cwd: 'src',
+                    src: '**/*.js',
+                    dest: 'dist',
+                    ext: '.min.js'
+                }],
+                options: {
 
-		copy: {
-			jsFiles: {
-				files: [{
-					expand: true,
-					cwd: 'src',
-					src: ['**/*.js'],
-					dest: 'dist'
-				}]
-			}
-		},
+                }
+            }
+        },
 
-		jshint: {
-			options: {
-				'jshintrc': '.jshintrc'
-			},
-			all: ['src','Gruntfile.js']
-		},
+        copy: {
+            jsFiles: {
+                files: [{
+                    expand: true,
+                    cwd: 'src',
+                    src: ['**/*.js'],
+                    dest: 'dist'
+                }]
+            }
+        },
 
-		watch: {
-			jsFiles: {
-				expand: true,
-				files: ['src/**/*.js'],
-				tasks: ['jshint', 'copy','uglify'],
-				options: {
-					spawn: false
-				}
-			}
-		}
+        jshint: {
+            options: {
+                'jshintrc': '.jshintrc'
+            },
+            all: ['src','Gruntfile.js']
+        },
 
-	});
+        jscs: {
+            options: {
+                config: '.jscsrc'
+            },
+            scripts: {
+                files: {
+                    src: [
+                        'src/**/*.js'
+                    ]
+                }
+            }
+        },
 
-	require('load-grunt-tasks')(grunt);
+        includereplace: {
+            dist: {
+                options: {
+                    globals: {
+                        repositoryUrl: '<%= pkg.repository.url %>',
+                        repositoryName: '<%= pkg.name %>'
+                    },
+                    prefix: '{{ ',
+                    suffix: ' }}'
+                },
+                src: 'demo/index.html',
+                dest: 'index.html'
+            }
+        },
 
-	grunt.registerTask('default', ['watch']);
-	grunt.registerTask('build', ['jshint', 'uglify', 'copy']);
+        watch: {
+            jsFiles: {
+                expand: true,
+                files: ['src/**/*.js', 'Gruntfile.js'],
+                tasks: ['jshint', 'jscs', 'copy', 'uglify'],
+                options: {
+                    spawn: false
+                }
+            },
+            demoFiles: {
+                expand: true,
+                files: ['demo/**/*.html'],
+                tasks: ['includereplace'],
+                options: {
+                    spawn: false
+                }
+            }
+        }
+
+    });
+
+    require('load-grunt-tasks')(grunt);
+
+    grunt.registerTask('default', ['watch']);
+    grunt.registerTask('build', ['jshint', 'jscs', 'uglify', 'copy', 'includereplace']);
 
 };

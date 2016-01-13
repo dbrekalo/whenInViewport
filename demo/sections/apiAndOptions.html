@@ -1,0 +1,57 @@
+<section class="attireBlock">
+    <div class="inner">
+
+        <h2 class="attireTitleType2">Api and options</h2>
+
+        <p class="attireTextType2">
+            Different ways and options of running plugin are examined bellow.
+        </p>
+
+        <pre class="attireCodeHighlight"><code class="language-javascript">
+
+            // As in example above run plugin with callback only
+            $('.fadeInParagraph').whenInViewport(function($paragraph) {
+                $paragraph.addClass('inViewport');
+            });
+
+            // With adjusted options
+            $('.fadeInParagraph').whenInViewport(function($paragraph) {
+                $paragraph.addClass('inViewport');
+            }, {
+                threshold: 100, // difference in pixels from user scroll position
+                setupOnce: true  // setup only once per dom element
+            });
+
+            // Kill all when in viewport handlers
+            $.WhenInViewport.destroy();
+        </code></pre>
+
+        <hr class="attireSeparator mod1">
+
+        <p class="attireTextType2">
+            Plugin options / defaults are exposed in $.WhenInViewport.defaults namespace so you can easily adjust them globally.
+            List of options is bellow.
+        </p>
+
+        <pre class="attireCodeHighlight"><code class="language-javascript">
+            $.WhenInViewport.defaults = {
+                callback: function() {},
+                threshold: 0, // difference in pixels from user scroll position
+                context: null, // callback context
+                setupOnce: false // setup only once per dom element
+            };
+        </code></pre>
+
+        <hr class="attireSeparator mod1">
+
+        <p class="attireTextType2">
+            Plugin does simple debouncing of scroll and resize events.
+            Should you choose to alter the delaying / rate-limiting engine (for example delegate to undescore's throttle or debounce functions) two methods are exposed:
+        </p>
+
+        <pre class="attireCodeHighlight"><code class="language-javascript">
+            $.WhenInViewport.setDelayEngine(_.throttle).setDelayTimeout(400);
+        </code></pre>
+
+    </div>
+</section>

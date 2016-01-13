@@ -1,6 +1,9 @@
 {
   "name": "whenInViewport",
-  "version": "1.2.4",
+  "description": "Handle elements as they enter viewport with this simple and lightweight jQuery plugin",
+  "version": "1.3.0",
+  "license": "MIT",
+  "main": "src/whenInViewport.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/dbrekalo/whenInViewport.git"
@@ -11,6 +14,11 @@
     "grunt-contrib-jshint": "^0.10.0",
     "grunt-contrib-uglify": "^0.6.0",
     "grunt-contrib-watch": "^0.6.1",
+    "grunt-jscs": "^1.5.0",
+    "grunt-include-replace": "^3.2.0",
     "load-grunt-tasks": "^0.6.0"
+  },
+  "dependencies": {
+    "jquery": ">1.11"
   }
 }

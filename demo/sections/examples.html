@@ -1,0 +1,71 @@
+<section class="attireBlock mod1 testCase">
+    <div class="inner">
+
+        <h2 class="attireTitleType2">Examples</h2>
+
+        <p class="attireTextType2">
+            Next few dummy paragraphs should display and fade in as we scroll down the web page.
+        </p>
+
+        <hr class="attireSeparator mod1">
+
+        <p class="attireTextType1 fadeInParagraph">
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+            Voluptas amet a accusamus eos numquam sint rerum, ipsum aperiam tempore, dolor, sed ex?
+            Corrupti obcaecati, atque ab ullam cum et nam!
+        </p>
+
+        <p class="attireTextType3 fadeInParagraph">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        </p>
+
+        <hr class="attireSeparator mod1 fadeInParagraph">
+
+        <p class="attireTextType3 fadeInParagraph">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+        </p>
+
+        <hr class="attireSeparator mod1 fadeInParagraph">
+
+        <p class="attireTextType3 fadeInParagraph">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        </p>
+
+        <style>
+            .fadeInParagraph {
+                position: relative; left: -20px; opacity: 0;  transition: opacity 2s, left 2s;
+            }
+            .fadeInParagraph.inViewport {
+                opacity: 1; top: 0; left: 0;
+            }
+        </style>
+
+        <script>
+            $('.fadeInParagraph').whenInViewport(function($paragraph) {
+                $paragraph.addClass('inViewport');
+            });
+        </script>
+
+        <hr class="attireSeparator mod1">
+
+        <p class="attireTextType2">
+            For this small slick animation all we had to write was following code
+        </p>
+
+        <pre class="attireCodeHighlight"><code class="language-javascript">
+            $('.fadeInParagraph').whenInViewport(function($paragraph) {
+                $paragraph.addClass('inViewport');
+            });
+        </code></pre>
+
+        <p class="attireTextType2">
+            Styling was done as simple css transition that was trigged when new class was applied to element.
+        </p>
+
+    </div>
+</section>
