@@ -15,15 +15,8 @@
         delayTimeout = 100,
         windowHeight,
         delayEngine = function(callback, timeout) {
-
-            var f = function() {
-                clearTimeout(f.timeout);
-                f.timeout = setTimeout(callback, timeout);
-            };
-
-            return f;
+            return callback;
         },
-
         processRegistryWithDelay;
 
     var events = {
@@ -63,13 +56,17 @@
 
         registerElement.counter = registerElement.counter || 0;
 
-        elRegistry['whenInViewport' + (++registerElement.counter)] = $.extend({}, $.whenInViewport.defaults, options, {
+        var registryKey =  'whenInViewport' + (++registerElement.counter);
+
+        elRegistry[registryKey] = $.extend({}, $.whenInViewport.defaults, options, {
             '$el':  $el,
             'topOffset': $el.offset().top
         });
 
         processRegistryWithDelay || (processRegistryWithDelay = delayEngine(processRegistry, 0));
         processRegistryWithDelay();
+
+        return registryKey;
 
     }
 
@@ -108,10 +105,17 @@
     function WhenInViewport(el, options) {
 
         typeof windowHeight === 'undefined' && (windowHeight = $window.height());
-        registerElement($(el), options);
+        this.key = registerElement($(el), options);
         events.checkRegistry();
 
     }
+
+    WhenInViewport.prototype.stopListening = function() {
+
+        delete elRegistry[this.key];
+        events.checkRegistry();
+
+    };
 
     $.extend(WhenInViewport, {
         setDelayEngine: function(engine) {
@@ -145,10 +149,10 @@
 
         return this.each(function() {
 
-            if (options.setupOnce && !$.data(this, 'whenInViewport')) {
-                $.data(this, 'whenInViewport', new WhenInViewport(this, options));
+            if (options.setupOnce) {
+                !$.data(this, 'whenInViewport') && $.data(this, 'whenInViewport', new WhenInViewport(this, options));
             } else {
-                new WhenInViewport(this, options);
+                $.data(this, 'whenInViewport', new WhenInViewport(this, options));
             }
 
         });

@@ -38,7 +38,7 @@
 
         <style>
             .fadeInParagraph {
-                position: relative; left: -20px; opacity: 0;  transition: opacity 2s, left 2s;
+                position: relative; left: -100px; opacity: 0;  transition: opacity 2s, left 2s;
             }
             .fadeInParagraph.inViewport {
                 opacity: 1; top: 0; left: 0;
@@ -46,9 +46,42 @@
         </style>
 
         <script>
+
+            var throttle = function(fn, threshhold, scope) {
+
+                threshhold || (threshhold = 100);
+                var last, deferTimer;
+
+                return function() {
+
+                    var context = scope || this,
+                        now = +new Date();
+
+                    if (last && now < last + threshhold) {
+
+                        clearTimeout(deferTimer);
+
+                        deferTimer = setTimeout(function() {
+                            last = now;
+                            fn.apply(context, arguments);
+                        }, threshhold);
+
+                    } else {
+
+                        last = now;
+                        fn.apply(context, arguments);
+
+                    }
+                };
+
+            };
+
+            $.whenInViewport.setDelayEngine(throttle);
+
             $('.fadeInParagraph').whenInViewport(function($paragraph) {
                 $paragraph.addClass('inViewport');
             });
+
         </script>
 
         <hr class="attireSeparator mod1">

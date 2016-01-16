@@ -22,8 +22,24 @@
                 setupOnce: true  // setup only once per dom element
             });
 
-            // Kill all when in viewport handlers
+            // Kill all whenInViewport handlers
             $.WhenInViewport.destroy();
+
+            // get instance
+            var footerInViewport = $('footer').whenInViewport(function($footer) {
+                $footer.addClass('inViewport');
+            }).data('whenInViewport');
+
+            // get instance via contructor
+            var footerInViewport = new $.WhenInViewport($('.footer').get(0), {
+                callback: function($footer) {
+                    $footer.addClass('inViewport');
+                }
+            });
+
+            // stop whenInViewport listener
+            footerInViewport.stopListening();
+
         </code></pre>
 
         <hr class="attireSeparator mod1">
@@ -45,13 +61,40 @@
         <hr class="attireSeparator mod1">
 
         <p class="attireTextType2">
-            Plugin does simple debouncing of scroll and resize events.
-            Should you choose to alter the delaying / rate-limiting engine (for example delegate to undescore's throttle or debounce functions) two methods are exposed:
+            If you want to set delaying / rate-limiting engine (for example delegate to undescore's throttle or debounce functions) two methods are exposed:
         </p>
 
         <pre class="attireCodeHighlight"><code class="language-javascript">
             $.WhenInViewport.setDelayEngine(_.throttle).setDelayTimeout(400);
         </code></pre>
+
+        <script>
+
+            $(document).ready(function() {
+
+                var footerInViewport1 = $('.attireFooter').whenInViewport(function($footer) {
+                    console.log('footer in viewport');
+                    $footer.addClass('inViewport1');
+                }, {
+                   threshold: 100
+                }).data('whenInViewport');
+
+                var footerInViewport2 = new $.WhenInViewport($('.attireFooter').get(0), {
+                    callback: function($footer) {
+                        console.log('footer in viewport');
+                        $footer.addClass('inViewport2');
+                    },
+                    threshold: 100
+                });
+
+                setTimeout(function() {
+                    footerInViewport1.stopListening();
+                    footerInViewport2.stopListening();
+                }, 1*5000);
+
+            });
+
+        </script>
 
     </div>
 </section>
