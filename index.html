@@ -82,12 +82,6 @@
             Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
         </p>
 
-        <hr class="attireSeparator mod1 fadeInParagraph">
-
-        <p class="attireTextType3 fadeInParagraph">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-        </p>
-
         <style>
             .fadeInParagraph {
                 position: relative; left: -100px; opacity: 0;  transition: opacity 2s, left 2s;
@@ -130,8 +124,10 @@
 
             $.whenInViewport.setDelayEngine(throttle);
 
-            $('.fadeInParagraph').whenInViewport(function($paragraph) {
-                $paragraph.addClass('inViewport');
+            $(document).ready(function() {
+                $('.fadeInParagraph').whenInViewport(function($paragraph) {
+                    $paragraph.addClass('inViewport');
+                });
             });
 
         </script>

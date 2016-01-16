@@ -1,7 +1,7 @@
 {
   "name": "when-in-viewport",
   "description": "Handle elements as they enter viewport with this simple and lightweight jQuery plugin",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "license": "MIT",
   "main": "src/whenInViewport.js",
   "repository": {
