@@ -80,8 +80,8 @@
 
             if (scrollOffset + windowHeight > item.topOffset - item.threshold) {
 
-                item.callback.call(item.context || window, item.$el);
                 delete elRegistry[key];
+                item.callback.call(item.context || window, item.$el);
 
                 events.checkRegistry();
 
