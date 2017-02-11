@@ -126,6 +126,11 @@
             delayTimeout = timeout;
             return this;
         },
+        checkAll: function() {
+            adjustPositions();
+            processRegistry();
+            return this;
+        },
         destroy: function() {
             elRegistry = {};
             events.destroy();
