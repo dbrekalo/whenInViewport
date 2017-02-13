@@ -70,12 +70,22 @@
 
             };
 
-            $.whenInViewport.setDelayEngine(throttle);
+            WhenInViewport.setRateLimiter(throttle, 150);
 
             $(document).ready(function() {
+
                 $('.fadeInParagraph').whenInViewport(function($paragraph) {
                     $paragraph.addClass('inViewport');
                 });
+
+                // var elements = Array.prototype.slice.call(document.getElementsByClassName('fadeInParagraph'));
+
+                // elements.forEach(function(element) {
+                //     new WhenInViewport(element, function(elementInViewport) {
+                //         elementInViewport.classList.add('inViewport');
+                //     });
+                // });
+
             });
 
         </script>
@@ -83,13 +93,31 @@
         <hr class="attireSeparator mod1">
 
         <p class="attireTextType2">
-            For this small slick animation all we had to write was following code
+            WhenInViewport comes with jQuery adapter included - for this small slick animation all we had to write was following code.
         </p>
 
         <pre class="attireCodeHighlight"><code class="language-javascript">
             $('.fadeInParagraph').whenInViewport(function($paragraph) {
                 $paragraph.addClass('inViewport');
             });
+        </code></pre>
+
+        <p class="attireTextType2">
+            Same result in plain javascript (without jquery) is achieved like so:
+        </p>
+
+        <pre class="attireCodeHighlight"><code class="language-javascript">
+
+            var elements = Array.prototype.slice.call(
+                document.getElementsByClassName('fadeInParagraph')
+            );
+
+            elements.forEach(function(element) {
+                new WhenInViewport(element, function(elementInViewport) {
+                    elementInViewport.classList.add('inViewport');
+                });
+            });
+
         </code></pre>
 
         <p class="attireTextType2">

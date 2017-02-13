@@ -1,6 +1,6 @@
 {
   "name": "whenInViewport",
-  "version": "1.5.0",
+  "version": "2.0.0",
   "homepage": "https://github.com/dbrekalo/whenInViewport",
   "authors": [
     "Damir Brekalo <dbrekalo@gmail.com>"
@@ -19,8 +19,5 @@
     "bower_components",
     "test",
     "tests"
-  ],
-  "dependencies": {
-    "jquery": ">1.11"
-  }
+  ]
 }

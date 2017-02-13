@@ -1,24 +1,41 @@
 {
   "name": "when-in-viewport",
   "description": "Handle elements as they enter viewport with this simple and lightweight jQuery plugin",
-  "version": "1.5.0",
+  "version": "2.0.0",
   "license": "MIT",
-  "main": "src/whenInViewport.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/dbrekalo/whenInViewport.git"
   },
-  "devDependencies": {
-    "grunt": "^0.4.5",
-    "grunt-contrib-copy": "^0.6.0",
-    "grunt-contrib-jshint": "^0.10.0",
-    "grunt-contrib-uglify": "^0.6.0",
-    "grunt-contrib-watch": "^0.6.1",
-    "grunt-jscs": "^1.5.0",
-    "grunt-include-replace": "^3.2.0",
-    "load-grunt-tasks": "^0.6.0"
+  "main": "src/whenInViewport.js",
+  "scripts": {
+    "watch": "grunt",
+    "build": "grunt build",
+    "test": "mocha --reporter spec",
+    "coverage": "istanbul cover _mocha -- -R spec",
+    "coverageReport": "npm run coverage && open coverage/lcov-report/*.html",
+    "coveralls": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
+    "bump:patch": "grunt bump:patch",
+    "bump:minor": "grunt bump:minor",
+    "bump:major": "grunt bump:major"
   },
-  "dependencies": {
-    "jquery": ">1.11"
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "coveralls": "^2.11.15",
+    "grunt": "^1.0.1",
+    "grunt-bump": "^0.8.0",
+    "grunt-cli": "^1.2.0",
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-contrib-uglify": "^2.0.0",
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-eslint": "^19.0.0",
+    "grunt-include-replace": "^5.0.0",
+    "istanbul": "^0.4.5",
+    "jquery": "^3.1.1",
+    "jsdom": "^9.10.0",
+    "jsdom-global": "^2.1.1",
+    "load-grunt-tasks": "^3.5.2",
+    "mocha": "^3.2.0",
+    "underscore": "^1.8.3"
   }
 }

@@ -23,9 +23,9 @@
         <h1 data-nav-title="About" class="attireTitleType1">When in viewport</h1>
 
         <p class="attireTextType1">
-            Handle elements as they enter viewport with this simple and lightweight jQuery plugin.
-            Useful for lazy loading of modules and content of any kind or applying animations.
-            It weighs about 1KB.
+            Handle elements as they enter viewport with this simple and lightweight javascript library.
+            Useful for content lazy loading and applying timed animations.
+            Has no dependencies and weighs less than 2KB.
         </p>
 
         <nav class="attireAuthor">
@@ -122,12 +122,22 @@
 
             };
 
-            $.whenInViewport.setDelayEngine(throttle);
+            WhenInViewport.setRateLimiter(throttle, 150);
 
             $(document).ready(function() {
+
                 $('.fadeInParagraph').whenInViewport(function($paragraph) {
                     $paragraph.addClass('inViewport');
                 });
+
+                // var elements = Array.prototype.slice.call(document.getElementsByClassName('fadeInParagraph'));
+
+                // elements.forEach(function(element) {
+                //     new WhenInViewport(element, function(elementInViewport) {
+                //         elementInViewport.classList.add('inViewport');
+                //     });
+                // });
+
             });
 
         </script>
@@ -135,13 +145,31 @@
         <hr class="attireSeparator mod1">
 
         <p class="attireTextType2">
-            For this small slick animation all we had to write was following code
+            WhenInViewport comes with jQuery adapter included - for this small slick animation all we had to write was following code.
         </p>
 
         <pre class="attireCodeHighlight"><code class="language-javascript">
             $('.fadeInParagraph').whenInViewport(function($paragraph) {
                 $paragraph.addClass('inViewport');
             });
+        </code></pre>
+
+        <p class="attireTextType2">
+            Same result in plain javascript (without jquery) is achieved like so:
+        </p>
+
+        <pre class="attireCodeHighlight"><code class="language-javascript">
+
+            var elements = Array.prototype.slice.call(
+                document.getElementsByClassName('fadeInParagraph')
+            );
+
+            elements.forEach(function(element) {
+                new WhenInViewport(element, function(elementInViewport) {
+                    elementInViewport.classList.add('inViewport');
+                });
+            });
+
         </code></pre>
 
         <p class="attireTextType2">
@@ -171,12 +199,11 @@
             $('.fadeInParagraph').whenInViewport(function($paragraph) {
                 $paragraph.addClass('inViewport');
             }, {
-                threshold: 100, // difference in pixels from user scroll position
-                setupOnce: true  // setup only once per dom element
+                threshold: 100 // difference in pixels from user scroll position
             });
 
             // Kill all whenInViewport handlers
-            $.WhenInViewport.destroy();
+            WhenInViewport.destroy();
 
             // get instance
             var footerInViewport = $('footer').whenInViewport(function($footer) {
@@ -184,10 +211,8 @@
             }).data('whenInViewport');
 
             // get instance via contructor
-            var footerInViewport = new $.WhenInViewport($('.footer').get(0), {
-                callback: function($footer) {
-                    $footer.addClass('inViewport');
-                }
+            var footerInViewport = new WhenInViewport($('.footer').get(0), function(footer) {
+                $(footer).addClass('inViewport');
             });
 
             // stop whenInViewport listener
@@ -198,27 +223,47 @@
         <hr class="attireSeparator mod1">
 
         <p class="attireTextType2">
-            Plugin options / defaults are exposed in $.WhenInViewport.defaults namespace so you can easily adjust them globally.
+            Plugin options / defaults are exposed in WhenInViewport.defaults namespace so you can easily adjust them globally.
             List of options is bellow.
         </p>
 
         <pre class="attireCodeHighlight"><code class="language-javascript">
-            $.WhenInViewport.defaults = {
-                callback: function() {},
+            WhenInViewport.defaults = {
                 threshold: 0, // difference in pixels from user scroll position
-                context: null, // callback context
-                setupOnce: false // setup only once per dom element
+                context: null // callback context
             };
         </code></pre>
 
         <hr class="attireSeparator mod1">
 
         <p class="attireTextType2">
-            If you want to set delaying / rate-limiting engine (for example delegate to undescore's throttle or debounce functions) two methods are exposed:
+            If you want to set delaying / rate-limiting engine for scroll and resize events (for example delegate to undescore's throttle or debounce functions)
+            a method for doing so is exposed:
         </p>
 
         <pre class="attireCodeHighlight"><code class="language-javascript">
-            $.WhenInViewport.setDelayEngine(_.throttle).setDelayTimeout(400);
+            WhenInViewport.setRateLimiter(_.throttle, 250);
+        </code></pre>
+
+        <hr class="attireSeparator mod1">
+
+        <p class="attireTextType2">
+            When page layout changes and no resize events are fired you might want to tell WhenInViewport to check all of its registered items:
+        </p>
+
+        <pre class="attireCodeHighlight"><code class="language-javascript">
+            WhenInViewport.checkAll();
+        </code></pre>
+
+        <hr class="attireSeparator mod1">
+
+        <p class="attireTextType2">
+            If you are running jquery that is is not exposed on global window variable and want to use WhenInViewpot via plugin facade:
+        </p>
+
+        <pre class="attireCodeHighlight"><code class="language-javascript">
+            var $ = require('jquery');
+            WhenInViewport.registerAsJqueryPlugin($);
         </code></pre>
 
         <script>
@@ -226,21 +271,20 @@
             $(document).ready(function() {
 
                 var footerInViewport1 = $('.attireFooter').whenInViewport(function($footer) {
-                    console.log('footer in viewport');
                     $footer.addClass('inViewport1');
                 }, {
-                   threshold: 100
+                   threshold: 300
                 }).data('whenInViewport');
 
-                var footerInViewport2 = new $.WhenInViewport($('.attireFooter').get(0), {
-                    callback: function($footer) {
-                        console.log('footer in viewport');
-                        $footer.addClass('inViewport2');
+                var footerInViewport2 = new WhenInViewport($('.attireFooter').get(0), {
+                    callback: function(footer) {
+                        $(footer).addClass('inViewport2');
                     },
-                    threshold: 100
+                    threshold: 300
                 });
 
                 setTimeout(function() {
+                    WhenInViewport.checkAll();
                     footerInViewport1.stopListening();
                     footerInViewport2.stopListening();
                 }, 1*5000);
@@ -256,6 +300,21 @@
     <div class="inner">
 
         <h2 class="attireTitleType2">Installation</h2>
+
+        <p class="attireTextType2">
+            WhenInViewport is packaged as UMD library so you can use it in CommonJS and AMD environment or with browser globals.
+        </p>
+
+        <pre class="attireCodeHighlight"><code class="language-javascript">
+            // install via npm
+            npm install when-in-viewport --save
+
+            // if you use bundler
+            var WhenInViewport = require('when-in-viewport');
+
+            // or just using browser globals
+            var WhenInViewport = window.WhenInViewport;
+        </code></pre>
 
         <p class="attireTextType2">
             For browser usage browse dist folder - if working with build tools go with src folder.
