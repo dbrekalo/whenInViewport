@@ -21,15 +21,12 @@
                 threshold: 100 // difference in pixels from user scroll position
             });
 
-            // Kill all whenInViewport handlers
-            WhenInViewport.destroy();
-
             // get instance
             var footerInViewport = $('footer').whenInViewport(function($footer) {
                 $footer.addClass('inViewport');
             }).data('whenInViewport');
 
-            // get instance via contructor
+            // get instance via constructor
             var footerInViewport = new WhenInViewport($('.footer').get(0), function(footer) {
                 $(footer).addClass('inViewport');
             });
@@ -56,12 +53,22 @@
         <hr class="attireSeparator mod1">
 
         <p class="attireTextType2">
-            If you want to set delaying / rate-limiting engine for scroll and resize events (for example delegate to undescore's throttle or debounce functions)
+            If you want to set delaying / rate-limiting engine for scroll and resize events (for example delegate to underscores throttle or debounce functions)
             a method for doing so is exposed:
         </p>
 
         <pre class="attireCodeHighlight"><code class="language-javascript">
             WhenInViewport.setRateLimiter(_.throttle, 250);
+        </code></pre>
+
+        <hr class="attireSeparator mod1">
+
+        <p class="attireTextType2">
+            If you want to kill all whenInViewport listeners:
+        </p>
+
+        <pre class="attireCodeHighlight"><code class="language-javascript">
+            WhenInViewport.destroy();
         </code></pre>
 
         <hr class="attireSeparator mod1">
@@ -77,7 +84,7 @@
         <hr class="attireSeparator mod1">
 
         <p class="attireTextType2">
-            If you are running jquery that is is not exposed on global window variable and want to use WhenInViewpot via plugin facade:
+            If you are running jQuery that is is not exposed on global window variable and want to use WhenInViewport via plugin facade:
         </p>
 
         <pre class="attireCodeHighlight"><code class="language-javascript">
