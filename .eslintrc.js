@@ -2,7 +2,8 @@ module.exports = {
     'env': {
         'browser': true,
         'commonjs': true,
-        'amd': true
+        'amd': true,
+        'mocha': true
     },
     'extends': 'eslint:recommended',
     'rules': {

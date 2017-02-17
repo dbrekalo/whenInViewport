@@ -1,49 +1,42 @@
-var assert = require("chai").assert;
+var assert = require('chai').assert;
 var _ = require('underscore');
-require('jsdom-global')();
-
-var $ = require('jquery');
-window.$ = $;
-var WhenInViewport = require("../");
+var $ = window.$ = require('jquery');
+var WhenInViewport = require('../');
 
 var testElement;
 var anotherTestElement;
+var spacer1;
+var spacer2;
 
-var scrollTo = function(num, callback) {
-    window.pageYOffset = num;
-    window.dispatchEvent(new Event('scroll'));
-    callback && callback();
-};
-
-var resizeHeight = function(num, callback) {
-    window.innerHeight = num;
-    window.dispatchEvent(new Event('resize'));
-    callback && callback();
-};
-
-var setElementPosition = function(element, num) {
-    element.getBoundingClientRect = function() {
-        return {top: num, left: 0};
-    }
-}
+var windowHeight;
 
 beforeEach(function() {
 
-    $('body').append('<div id="test"></div><div id="anotherTest"></div>');
+    windowHeight = window.innerHeight;
 
-    window.innerHeight = 500;
+    window.scrollTo(0, 0);
+
+    $('body').css({
+        height: '10000px',
+        margin: 0,
+        padding: 0
+    }).html('').append(
+        '<div id="spacer1" style="height: ' + 2 * windowHeight + 'px"></div>' +
+        '<div id="test"></div>' +
+        '<div id="spacer2" style="height: ' + windowHeight + 'px"></div>' +
+        '<div id="anotherTest"></div>'
+    );
+
     testElement = document.getElementById('test');
-    anotherTestElement = document.getElementById('anotherTest')
-
-    scrollTo(0);
-    setElementPosition(testElement, 1000);
-    setElementPosition(anotherTestElement, 2000);
+    anotherTestElement = document.getElementById('anotherTest');
+    spacer1 = document.getElementById('spacer1');
+    spacer2 = document.getElementById('spacer2');
 
     WhenInViewport.destroy();
 
 });
 
-describe("WhenInViewport", function() {
+describe('WhenInViewport', function() {
 
     it('fires callback with element as parameter', function(done) {
 
@@ -52,7 +45,7 @@ describe("WhenInViewport", function() {
             done();
         });
 
-        scrollTo(1500);
+        window.scrollTo(0, 2 * windowHeight);
 
     });
 
@@ -83,22 +76,30 @@ describe("WhenInViewport", function() {
             threshold: 100
         });
 
-        scrollTo(400);
+        window.scrollTo(0, windowHeight - 100);
 
     });
 
     it('stops listening when required', function(done) {
 
-        var inViewport = false;
+        var elementInViewport = false;
+        var anotherElementViewport = false;
 
-        new WhenInViewport(testElement, function(elementInViewport) {
-            inViewport = true;
+        new WhenInViewport(testElement, function() {
+            elementInViewport = true;
         }).stopListening();
 
-        scrollTo(1500, function() {
-            assert.isFalse(inViewport);
-            done();
+        new WhenInViewport(anotherTestElement, function() {
+            anotherElementViewport = true;
         });
+
+        window.scrollTo(0, 2 * windowHeight - 100);
+
+        setTimeout(function() {
+            assert.isFalse(elementInViewport);
+            assert.isFalse(anotherElementViewport);
+            done();
+        }, 10);
 
     });
 
@@ -112,14 +113,21 @@ describe("WhenInViewport", function() {
             inViewport = true;
         });
 
-        scrollTo(1500, function() {
+        window.scrollTo(0, 3 * windowHeight);
+
+        setTimeout(function() {
+
             assert.isFalse(inViewport);
+
             setTimeout(function() {
+
                 assert.isTrue(inViewport);
                 WhenInViewport.setRateLimiter(function(callback) { return callback; }, 100);
                 done();
+
             }, 550);
-        });
+
+        }, 10);
 
     });
 
@@ -136,11 +144,16 @@ describe("WhenInViewport", function() {
             anotherElementViewport = true;
         });
 
-        resizeHeight(3000, function() {
+        spacer1.style.height = '50px';
+        spacer2.style.height = '50px';
+
+        window.dispatchEvent(new Event('resize'));
+
+        setTimeout(function() {
             assert.isTrue(elementInViewport);
             assert.isTrue(anotherElementViewport);
             done();
-        });
+        }, 10);
 
     });
 
@@ -157,7 +170,8 @@ describe("WhenInViewport", function() {
             anotherElementViewport = true;
         });
 
-        window.innerHeight = 3000;
+        spacer1.style.height = '50px';
+        spacer2.style.height = '50px';
 
         WhenInViewport.checkAll();
 
@@ -184,6 +198,8 @@ describe("WhenInViewport", function() {
             setupOnce: true
         });
 
+        assert.instanceOf($testElement.data('whenInViewport'), WhenInViewport);
+
         $anotherTestElement.whenInViewport({
             callback: function($el) {
                 $el.addClass('inViewport');
@@ -193,12 +209,14 @@ describe("WhenInViewport", function() {
             context: testContext
         });
 
-        scrollTo(1500, function() {
+        window.scrollTo(0, 3 * windowHeight);
+
+        setTimeout(function() {
             assert.isTrue($testElement.hasClass('inViewport'));
             assert.isFalse($testElement.hasClass('againInViewport'));
             assert.isTrue($anotherTestElement.hasClass('inViewport'));
             done();
-        });
+        }, 10);
 
     });
 

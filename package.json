@@ -1,6 +1,6 @@
 {
   "name": "when-in-viewport",
-  "description": "Handle elements as they enter viewport with this simple and lightweight jQuery plugin",
+  "description": "Handle elements as they enter viewport with this simple and lightweight javascript library.",
   "version": "2.0.1",
   "license": "MIT",
   "repository": {
@@ -11,10 +11,9 @@
   "scripts": {
     "watch": "grunt",
     "build": "grunt build",
-    "test": "mocha --reporter spec",
-    "coverage": "istanbul cover _mocha -- -R spec",
-    "coverageReport": "npm run coverage && open coverage/lcov-report/*.html",
-    "coveralls": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
+    "watch:test": "node ./node_modules/karma/bin/karma start --browsers PhantomJS",
+    "test": "node ./node_modules/karma/bin/karma start --single-run --browsers PhantomJS",
+    "coveralls": "cat ./coverage/lcov/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
     "bump:patch": "grunt bump:patch",
     "bump:minor": "grunt bump:minor",
     "bump:major": "grunt bump:major"
@@ -30,12 +29,21 @@
     "grunt-contrib-watch": "^1.0.0",
     "grunt-eslint": "^19.0.0",
     "grunt-include-replace": "^5.0.0",
+    "gulp": "^3.8.11",
     "istanbul": "^0.4.5",
+    "istanbul-instrumenter-loader": "^1.2.0",
     "jquery": "^3.1.1",
-    "jsdom": "^9.10.0",
-    "jsdom-global": "^2.1.1",
+    "karma": "^1.4.1",
+    "karma-chrome-launcher": "^2.0.0",
+    "karma-coverage": "^1.1.1",
+    "karma-mocha": "^1.3.0",
+    "karma-phantomjs-launcher": "^1.0.2",
+    "karma-spec-reporter": "0.0.26",
+    "karma-webpack": "^2.0.2",
     "load-grunt-tasks": "^3.5.2",
     "mocha": "^3.2.0",
-    "underscore": "^1.8.3"
+    "mocha-loader": "^1.1.0",
+    "underscore": "^1.8.3",
+    "webpack": "^1.14.0"
   }
 }
