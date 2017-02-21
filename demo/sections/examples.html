@@ -41,50 +41,54 @@
 
         <script>
 
-            var throttle = function(fn, threshhold, scope) {
+            attireQueue.push(function($) {
 
-                threshhold || (threshhold = 100);
-                var last, deferTimer;
+                var throttle = function(fn, threshhold, scope) {
 
-                return function() {
+                    threshhold || (threshhold = 100);
+                    var last, deferTimer;
 
-                    var context = scope || this,
-                        now = +new Date();
+                    return function() {
 
-                    if (last && now < last + threshhold) {
+                        var context = scope || this,
+                            now = +new Date();
 
-                        clearTimeout(deferTimer);
+                        if (last && now < last + threshhold) {
 
-                        deferTimer = setTimeout(function() {
+                            clearTimeout(deferTimer);
+
+                            deferTimer = setTimeout(function() {
+                                last = now;
+                                fn.apply(context, arguments);
+                            }, threshhold);
+
+                        } else {
+
                             last = now;
                             fn.apply(context, arguments);
-                        }, threshhold);
 
-                    } else {
+                        }
+                    };
 
-                        last = now;
-                        fn.apply(context, arguments);
-
-                    }
                 };
 
-            };
+                WhenInViewport.setRateLimiter(throttle, 150);
 
-            WhenInViewport.setRateLimiter(throttle, 150);
+                $(document).ready(function() {
 
-            $(document).ready(function() {
+                    $('.fadeInParagraph').whenInViewport(function($paragraph) {
+                        $paragraph.addClass('inViewport');
+                    });
 
-                $('.fadeInParagraph').whenInViewport(function($paragraph) {
-                    $paragraph.addClass('inViewport');
+                    // var elements = Array.prototype.slice.call(document.getElementsByClassName('fadeInParagraph'));
+
+                    // elements.forEach(function(element) {
+                    //     new WhenInViewport(element, function(elementInViewport) {
+                    //         elementInViewport.classList.add('inViewport');
+                    //     });
+                    // });
+
                 });
-
-                // var elements = Array.prototype.slice.call(document.getElementsByClassName('fadeInParagraph'));
-
-                // elements.forEach(function(element) {
-                //     new WhenInViewport(element, function(elementInViewport) {
-                //         elementInViewport.classList.add('inViewport');
-                //     });
-                // });
 
             });
 

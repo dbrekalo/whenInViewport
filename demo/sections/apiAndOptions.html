@@ -94,26 +94,30 @@
 
         <script>
 
-            $(document).ready(function() {
+            attireQueue.push(function($) {
 
-                var footerInViewport1 = $('.attireFooter').whenInViewport(function($footer) {
-                    $footer.addClass('inViewport1');
-                }, {
-                   threshold: 300
-                }).data('whenInViewport');
+                $(document).ready(function() {
 
-                var footerInViewport2 = new WhenInViewport($('.attireFooter').get(0), {
-                    callback: function(footer) {
-                        $(footer).addClass('inViewport2');
-                    },
-                    threshold: 300
+                    var footerInViewport1 = $('.attireFooter').whenInViewport(function($footer) {
+                        $footer.addClass('inViewport1');
+                    }, {
+                       threshold: 300
+                    }).data('whenInViewport');
+
+                    var footerInViewport2 = new WhenInViewport($('.attireFooter').get(0), {
+                        callback: function(footer) {
+                            $(footer).addClass('inViewport2');
+                        },
+                        threshold: 300
+                    });
+
+                    setTimeout(function() {
+                        WhenInViewport.checkAll();
+                        footerInViewport1.stopListening();
+                        footerInViewport2.stopListening();
+                    }, 1*5000);
+
                 });
-
-                setTimeout(function() {
-                    WhenInViewport.checkAll();
-                    footerInViewport1.stopListening();
-                    footerInViewport2.stopListening();
-                }, 1*5000);
 
             });
 

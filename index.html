@@ -7,12 +7,12 @@
 <title>When in viewport</title>
 <meta name="description" content="Handle elements as they enter viewport with this simple and lightweight javascript library.">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="canonical" href="https://github.com/dbrekalo/whenInViewport.git/"/>
 
         <link href='https://fonts.googleapis.com/css?family=Lato:400,300,700,900&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="https://rawgit.com/dbrekalo/attire/master/dist/css/build.min.css">
-<script src="https://rawgit.com/dbrekalo/attire/master/dist/js/build.min.js"></script>
 
-        <script src="dist/whenInViewport.js"></script>
+<script>attireQueue = [];</script>
 
     </head>
 <body>
@@ -93,50 +93,54 @@
 
         <script>
 
-            var throttle = function(fn, threshhold, scope) {
+            attireQueue.push(function($) {
 
-                threshhold || (threshhold = 100);
-                var last, deferTimer;
+                var throttle = function(fn, threshhold, scope) {
 
-                return function() {
+                    threshhold || (threshhold = 100);
+                    var last, deferTimer;
 
-                    var context = scope || this,
-                        now = +new Date();
+                    return function() {
 
-                    if (last && now < last + threshhold) {
+                        var context = scope || this,
+                            now = +new Date();
 
-                        clearTimeout(deferTimer);
+                        if (last && now < last + threshhold) {
 
-                        deferTimer = setTimeout(function() {
+                            clearTimeout(deferTimer);
+
+                            deferTimer = setTimeout(function() {
+                                last = now;
+                                fn.apply(context, arguments);
+                            }, threshhold);
+
+                        } else {
+
                             last = now;
                             fn.apply(context, arguments);
-                        }, threshhold);
 
-                    } else {
+                        }
+                    };
 
-                        last = now;
-                        fn.apply(context, arguments);
-
-                    }
                 };
 
-            };
+                WhenInViewport.setRateLimiter(throttle, 150);
 
-            WhenInViewport.setRateLimiter(throttle, 150);
+                $(document).ready(function() {
 
-            $(document).ready(function() {
+                    $('.fadeInParagraph').whenInViewport(function($paragraph) {
+                        $paragraph.addClass('inViewport');
+                    });
 
-                $('.fadeInParagraph').whenInViewport(function($paragraph) {
-                    $paragraph.addClass('inViewport');
+                    // var elements = Array.prototype.slice.call(document.getElementsByClassName('fadeInParagraph'));
+
+                    // elements.forEach(function(element) {
+                    //     new WhenInViewport(element, function(elementInViewport) {
+                    //         elementInViewport.classList.add('inViewport');
+                    //     });
+                    // });
+
                 });
-
-                // var elements = Array.prototype.slice.call(document.getElementsByClassName('fadeInParagraph'));
-
-                // elements.forEach(function(element) {
-                //     new WhenInViewport(element, function(elementInViewport) {
-                //         elementInViewport.classList.add('inViewport');
-                //     });
-                // });
 
             });
 
@@ -275,26 +279,30 @@
 
         <script>
 
-            $(document).ready(function() {
+            attireQueue.push(function($) {
 
-                var footerInViewport1 = $('.attireFooter').whenInViewport(function($footer) {
-                    $footer.addClass('inViewport1');
-                }, {
-                   threshold: 300
-                }).data('whenInViewport');
+                $(document).ready(function() {
 
-                var footerInViewport2 = new WhenInViewport($('.attireFooter').get(0), {
-                    callback: function(footer) {
-                        $(footer).addClass('inViewport2');
-                    },
-                    threshold: 300
+                    var footerInViewport1 = $('.attireFooter').whenInViewport(function($footer) {
+                        $footer.addClass('inViewport1');
+                    }, {
+                       threshold: 300
+                    }).data('whenInViewport');
+
+                    var footerInViewport2 = new WhenInViewport($('.attireFooter').get(0), {
+                        callback: function(footer) {
+                            $(footer).addClass('inViewport2');
+                        },
+                        threshold: 300
+                    });
+
+                    setTimeout(function() {
+                        WhenInViewport.checkAll();
+                        footerInViewport1.stopListening();
+                        footerInViewport2.stopListening();
+                    }, 1*5000);
+
                 });
-
-                setTimeout(function() {
-                    WhenInViewport.checkAll();
-                    footerInViewport1.stopListening();
-                    footerInViewport2.stopListening();
-                }, 1*5000);
 
             });
 
@@ -337,9 +345,14 @@
     <a class="githubRibbon" href="https://github.com/dbrekalo/whenInViewport.git">
     <img src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png">
 </a>
-    <footer class="attireFooter">
+    <section class="attireUserRepositories" data-only-with-pages="true" data-user="dbrekalo"></section>
+<footer class="attireFooter">
     <p>This page is built with <a href="http://dbrekalo.github.io/attire/">Attire</a>.</p>
 </footer>
+
+<script src="https://rawgit.com/dbrekalo/attire/master/dist/js/build.min.js"></script>
+
+    <script src="dist/whenInViewport.js"></script>
 
 </body>
 
