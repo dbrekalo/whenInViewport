@@ -299,8 +299,10 @@
 
     };
 
-    var $ = window.jQuery || window.$;
-    $ && WhenInViewport.registerAsJqueryPlugin($);
+    if (typeof window !== 'undefined') {
+        var $ = window.jQuery || window.$;
+        $ && WhenInViewport.registerAsJqueryPlugin($);
+    }
 
     return WhenInViewport;
 
